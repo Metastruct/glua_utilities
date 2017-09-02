@@ -1,0 +1,21 @@
+{
+  "name": "netext",
+  "version": "1.0.0",
+  "description": "netext",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metastruct/glua_utilities.git#netext"
+  },
+  "keywords": [
+    "gmod",
+    "garrysmod"
+  ],
+  "author": "Metastruct",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/metastruct/glua_utilities/issues"
+  },
+  "homepage": "https://github.com/Metastruct/glua_utilities/tree/netext",
+  "dependencies": {
+  }
+}
