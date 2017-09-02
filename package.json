@@ -1,0 +1,21 @@
+{
+  "name": "co",
+  "version": "1.0.0",
+  "description": "co",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metastruct/glua_utilities.git#co"
+  },
+  "keywords": [
+    "gmod",
+    "garrysmod"
+  ],
+  "author": "Metastruct",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/metastruct/glua_utilities/issues"
+  },
+  "homepage": "https://github.com/metastruct/glua_utilities#readme",
+  "dependencies": {
+  }
+}
