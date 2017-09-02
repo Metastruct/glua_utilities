@@ -1,0 +1,21 @@
+{
+  "name": "helpers",
+  "version": "1.0.0",
+  "description": "things that should have their own repo or at least a branch",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metastruct/glua_utilities.git#helpers"
+  },
+  "keywords": [
+    "gmod",
+    "garrysmod"
+  ],
+  "author": "Metastruct",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/metastruct/glua_utilities/issues"
+  },
+  "homepage": "https://github.com/Metastruct/glua_utilities/tree/helpers",
+  "dependencies": {
+  }
+}
