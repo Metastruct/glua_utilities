@@ -16,12 +16,12 @@
   },
   "homepage": "https://github.com/Metastruct/glua_utilities/tree/coext",
   "peerDependencies": {
-    "co": "git+https://github.com/Metastruct/gmod-imageutils.git#co"
+    "co": "git+https://github.com/Metastruct/glua_utilities.git#co"
   },
   "bundledDependencies": [
     "co"
   ],
   "dependencies": {
-	"co": "git+https://github.com/Metastruct/gmod-imageutils.git#co"
+	"co": "git+https://github.com/Metastruct/glua_utilities.git#co"
   }
 }
