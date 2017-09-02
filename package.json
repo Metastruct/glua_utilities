@@ -1,0 +1,20 @@
+{
+  "name": "coext",
+  "version": "1.0.0",
+  "description": "co extensions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metastruct/glua_utilities.git#coext"
+  },
+  "keywords": [
+    "gmod",
+    "garrysmod"
+  ],
+  "author": "Metastruct",
+  "bugs": {
+    "url": "https://github.com/metastruct/glua_utilities/issues"
+  },
+  "homepage": "https://github.com/Metastruct/glua_utilities/tree/coext",
+  "dependencies": {
+  }
+}
