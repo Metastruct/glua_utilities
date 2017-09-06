@@ -1,0 +1,51 @@
+{
+  "name": "glua_utilities",
+  "version": "1.0.0",
+  "description": "Garry's Mod Misc Utilities. This bundles them all for testing and as an example.",
+  "files": [
+    "lua"
+  ],
+  "peerDependencies": {
+    "gmod-imageutils": "git+https://github.com/Metastruct/gmod-imageutils.git",
+    "co": "git+https://github.com/Metastruct/glua_utilities.git#co",
+    "coext": "git+https://github.com/Metastruct/glua_utilities.git#coext",
+    "helpers": "git+https://github.com/Metastruct/glua_utilities.git#helpers",
+    "netext": "git+https://github.com/Metastruct/glua_utilities.git#netext",
+    "webbrowser": "git+https://github.com/Metastruct/glua_utilities.git#webbrowser"
+  },
+  "bundledDependencies": [
+    "gmod-imageutils",
+    "co",
+    "coext",
+    "helpers",
+    "netext",
+    "webbrowser"
+  ],
+  "devDependencies": {
+    "gmod-packager": "git+https://github.com/Python1320/gmod-packager.git"
+  },
+  "scripts": {
+    "postinstall": "gmod-packager"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Metastruct/glua_utilities.git"
+  },
+  "keywords": [
+    "gmod",
+    "utilities"
+  ],
+  "author": "Metastruct",
+  "bugs": {
+    "url": "https://github.com/Metastruct/glua_utilities/issues"
+  },
+  "homepage": "https://github.com/Metastruct/glua_utilities#readme",
+  "dependencies": {
+    "gmod-imageutils": "git+https://github.com/Metastruct/gmod-imageutils.git",
+    "co": "git+https://github.com/Metastruct/glua_utilities.git#co",
+    "coext": "git+https://github.com/Metastruct/glua_utilities.git#coext",
+    "helpers": "git+https://github.com/Metastruct/glua_utilities.git#helpers",
+    "netext": "git+https://github.com/Metastruct/glua_utilities.git#netext",
+    "webbrowser": "git+https://github.com/Metastruct/glua_utilities.git#webbrowser"
+  }
+}
