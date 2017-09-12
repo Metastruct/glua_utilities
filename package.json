@@ -10,6 +10,7 @@
     "gmod",
     "garrysmod"
   ],
+  "files": ["lua"],
   "author": "Metastruct",
   "license": "ISC",
   "bugs": {

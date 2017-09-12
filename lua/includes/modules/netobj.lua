@@ -1,3 +1,7 @@
+AddCSLuaFile()
+
+require'netqueue'
+
 local net=net
 
 local netobj={}

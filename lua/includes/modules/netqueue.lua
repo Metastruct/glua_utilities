@@ -4,6 +4,8 @@ if CLIENT then
 	return
 end
 
+AddCSLuaFile()
+
 local meta={__index=table}
 local queue=setmetatable({},meta )
 local started=false
