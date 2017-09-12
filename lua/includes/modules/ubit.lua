@@ -1,4 +1,7 @@
-AddCSLuaFile()
+if SERVER then
+	AddCSLuaFile()
+end
+
 
 ubit=ubit or {}
 

@@ -1,4 +1,7 @@
-AddCSLuaFile()
+if SERVER then
+	AddCSLuaFile()
+end
+
 
 local functions = { }
 local added = false

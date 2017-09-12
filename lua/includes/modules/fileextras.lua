@@ -1,4 +1,6 @@
-AddCSLuaFile()
+if SERVER then
+	AddCSLuaFile()
+end
 
 
 local File = FindMetaTable"File"

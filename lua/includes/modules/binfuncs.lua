@@ -1,4 +1,6 @@
-if SERVER then  AddCSLuaFile"binfuncs.lua" end
+if SERVER then
+	AddCSLuaFile()
+end
 
 do -- uint conversion..
 	local mod   = math.fmod
