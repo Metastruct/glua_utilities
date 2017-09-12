@@ -12,6 +12,7 @@
   ],
   "author": "Metastruct",
   "license": "ISC",
+  "files": ["lua"],
   "bugs": {
     "url": "https://github.com/metastruct/glua_utilities/issues"
   },
