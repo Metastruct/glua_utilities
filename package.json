@@ -12,6 +12,7 @@
   ],
   "author": "Metastruct",
   "license": "MPL-2.0",
+  "files": ["lua"],
   "bugs": {
     "url": "https://github.com/metastruct/glua_utilities/issues"
   },
