@@ -1,6 +1,8 @@
 --setfenv(1,_G)
 local NATIVE = MENU_DLL ==nil and SERVER==nil and CLIENT==nil
 
+if SERVER then AddCSLuaFile() end
+
 local coroutine = coroutine or require'coroutine'
 
 local meta={}
