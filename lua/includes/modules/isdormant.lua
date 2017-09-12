@@ -1,3 +1,7 @@
+if SERVER then
+	AddCSLuaFile()
+	return
+end
 
 local Tag="isdormant"
 
