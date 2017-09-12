@@ -7,6 +7,7 @@
   ],
   "peerDependencies": {
     "gmod-imageutils": "git+https://github.com/Metastruct/gmod-imageutils.git",
+    "gmod-sqliteext": "git+https://github.com/Metastruct/sqliteext.git",
     "co": "git+https://github.com/Metastruct/glua_utilities.git#co",
     "coext": "git+https://github.com/Metastruct/glua_utilities.git#coext",
     "helpers": "git+https://github.com/Metastruct/glua_utilities.git#helpers",
@@ -15,6 +16,7 @@
   },
   "bundledDependencies": [
     "gmod-imageutils",
+    "gmod-sqliteext",
     "co",
     "coext",
     "helpers",
@@ -42,6 +44,7 @@
   "homepage": "https://github.com/Metastruct/glua_utilities#readme",
   "dependencies": {
     "gmod-imageutils": "git+https://github.com/Metastruct/gmod-imageutils.git",
+    "gmod-sqliteext": "git+https://github.com/Metastruct/sqliteext.git",
     "co": "git+https://github.com/Metastruct/glua_utilities.git#co",
     "coext": "git+https://github.com/Metastruct/glua_utilities.git#coext",
     "helpers": "git+https://github.com/Metastruct/glua_utilities.git#helpers",
