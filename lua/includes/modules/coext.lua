@@ -1,5 +1,6 @@
 
 local Tag='coext'
+if SERVER then AddCSLuaFile() end
 
 
 if not co then require"co" end
