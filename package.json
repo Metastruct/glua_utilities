@@ -1,0 +1,22 @@
+{
+  "name": "gmod-clientchatcommand",
+  "version": "1.0.0",
+  "description": "clientchatcommand",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metastruct/glua_utilities.git#clientchatcommand"
+  },
+  "keywords": [
+    "gmod",
+    "garrysmod"
+  ],
+  "files": ["lua"],
+  "author": "Metastruct",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/metastruct/glua_utilities/issues"
+  },
+  "homepage": "https://github.com/Metastruct/glua_utilities/tree/clientchatcommand",
+  "dependencies": {
+  }
+}
