@@ -11,6 +11,7 @@
     "co": "git+https://github.com/Metastruct/glua_utilities.git#co",
     "coext": "git+https://github.com/Metastruct/glua_utilities.git#coext",
     "helpers": "git+https://github.com/Metastruct/glua_utilities.git#helpers",
+    "gmod-clientchatcommand": "git+https://github.com/Metastruct/glua_utilities.git#clientchatcommand",
     "netext": "git+https://github.com/Metastruct/glua_utilities.git#netext",
     "webbrowser": "git+https://github.com/Metastruct/glua_utilities.git#webbrowser"
   },
@@ -20,6 +21,7 @@
     "co",
     "coext",
     "helpers",
+    "gmod-clientchatcommand",
     "netext",
     "webbrowser"
   ],
@@ -48,6 +50,7 @@
     "co": "git+https://github.com/Metastruct/glua_utilities.git#co",
     "coext": "git+https://github.com/Metastruct/glua_utilities.git#coext",
     "helpers": "git+https://github.com/Metastruct/glua_utilities.git#helpers",
+    "gmod-clientchatcommand": "git+https://github.com/Metastruct/glua_utilities.git#clientchatcommand",
     "netext": "git+https://github.com/Metastruct/glua_utilities.git#netext",
     "webbrowser": "git+https://github.com/Metastruct/glua_utilities.git#webbrowser"
   }
