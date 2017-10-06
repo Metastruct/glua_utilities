@@ -1,5 +1,6 @@
 --TODO: pl:SetNetDataType("varname",TYPE_STRING)
 
+
 -- magic string length handling
 	local TYPE_STRING = TYPE_STRING
 	local function assert_int(n) assert( math.floor(n)==n ,"not a whole byte!?") end
@@ -79,7 +80,7 @@ end
 local lookup={}
 
 util.AddNetworkString(Tag)
-
+require 'netqueue'
 
 
 local SetBurst do
