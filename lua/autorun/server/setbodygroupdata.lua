@@ -1,4 +1,4 @@
-local Tag = 'SetBodyGroupData'
+local Tag = 'BodyGroupData'
 
 util.AddNetworkString(Tag)
 
