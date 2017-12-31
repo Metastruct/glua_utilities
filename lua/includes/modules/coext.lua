@@ -34,19 +34,85 @@ function co.fetch(url,hdr)
 end
 
 
-co.PlayURL=function(url,params)
-	local cb=co.newcb()
-	sound.PlayURL(url,params or '',cb)
-	return co.waitcb(cb)
+if CLIENT then
+	
+	AudioChannels = AudioChannels or {}
+
+	local function volCheck( chan )
+		if not chan:IsValid() then return end
+		local focus = not system.IsWindows() or system.HasFocus() -- currently only works on windows. assume focus if outside windows
+		local vol = focus and 1 or 0
+		chan:SetVolume( vol )
+	end
+
+	co.PlayURL=function(url,params)
+		local cb=co.newcb()
+
+		if not params then params = '' end
+		if not params:lower():find( "noplay" ) then
+			params = string.Split( params, " " )
+			table.insert( params, "noplay" )
+			params = table.concat( params, " " )
+		end
+
+		sound.PlayURL(url,params,function( chan )
+		
+			if chan then
+				volCheck( chan )
+				chan:Play()
+				AudioChannels[chan] = true
+			end
+
+			cb()
+
+		end )
+		return co.waitcb(cb)
+	end
+
+	co.PlayFile=function(url,params)
+		local cb=co.newcb()
+
+		if not params then params = '' end
+		if not params:lower():find( "noplay" ) then
+			params = string.Split( params, " " )
+			table.insert( params, "noplay" )
+			params = table.concat( params, " " )
+		end
+
+		sound.PlayFile(url,params,function( chan )
+			
+			if chan then
+				volCheck( chan )
+				chan:Play()
+				AudioChannels[chan] = true
+			end
+
+			cb()
+
+		end)
+		return co.waitcb(cb)
+	end
+
+	hook.Add( "Think", Tag .. "_audio", function()
+
+		local toRemove = {}
+		for chan, _ in pairs( AudioChannels ) do
+
+			if not chan:IsValid() or ( not chan:IsOnline() and not chan:IsLooping() and chan:GetTime() == chan:GetLength() ) then
+				table.insert( toRemove, chan )
+			else
+				volCheck( chan )
+			end
+
+		end
+
+		for _, chan in pairs( toRemove ) do
+			AudioChannels[chan] = nil
+		end
+
+	end )
+
 end
-
-co.PlayFile=function(url,params)
-	local cb=co.newcb()
-	sound.PlayFile(url,params or '',cb)
-	return co.waitcb(cb)
-end
-
-
 
 -- server info query
 -- TODO: Validate IP
