@@ -420,6 +420,84 @@ function MDL:Attachments()
 	
 	return t
 end
+-----------------------------
+
+
+local mstudiotexture_t_size =
+	4  -- int		sznameindex;
+	+4 -- int		flags;
+	+4 -- int		used;
+	+4 -- int		unused1;
+	+4 -- int		material;
+	+4 -- int		client_material;
+	+4*10 -- int	unused[10];
+
+function MDL:offsetTexture( i )
+	assert(i>=0 and i<=self.texture_count)
+	return self.texture_offset + mstudiotexture_t_size * i
+end
+
+function MDL:Textures()
+	local f = self.file
+	local t = self.texture_nameslist
+	if t then return t end
+	
+	t = {}
+	
+	for i=0,self.texture_count-1 do -- mstudiotexture_t --
+	
+		local thispos = self:offsetTexture(i)
+		assert(self:SeekTo(thispos))
+		
+		local sznameindex = from_int(f:Read(4),true)
+		
+		assert(self:SeekTo(thispos + sznameindex))
+		local name = f:ReadString()
+		
+		t[#t+1] = {name}
+		
+	end
+
+	self.texture_nameslist = t
+	
+	return t
+end
+
+-----------------------------
+
+function MDL:TextureDirs()
+	local f = self.file
+	local t = self.texturedirs
+	if t then return t end
+
+	t = {}
+
+	assert(self:SeekTo(self.texturedir_offset))
+	local offsets={}
+	for i=1,self.texturedir_count do
+		local offset = from_int(f:Read(4),true)
+		offsets[i]=offset
+	end
+	
+	for _,offset in next,offsets do
+		assert(self:SeekTo(offset))
+		local name = f:ReadString()
+
+		t[#t+1] = name
+
+	end
+
+	self.texturedirs = t
+
+	return t
+end
+
+
+
+
+
+
+-----------------------------
 
 local mstudiobodyparts_t_size =
 	4 -- int	sznameindex;
