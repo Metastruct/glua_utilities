@@ -103,10 +103,10 @@ GMA.tmp_entry = entry
 function GMA:EnumFiles(reset)
 	local f = self.file
 	
-	if reset then
+	if reset or self.parsed_filelist==nil then
 		self.parsed_filelist = false
 		self._iOffset = 0
-		f:Seek(res.file_enum)
+		f:Seek(self.file_enum)
 	end
 	assert(not self.parsed_filelist)
 	
