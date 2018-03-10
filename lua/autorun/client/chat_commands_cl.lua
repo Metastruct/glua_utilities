@@ -22,9 +22,10 @@ local function Parse(pl,msg)
 	local command = commands[com] or commands[com:lower()]
 	
 	if command then
-		local ok,err = xpcall(command,debug.traceback,paramstr,msg)
-		if not ok then ErrorNoHalt(("%s\n"):format(err)) end
-		if ret == true then return ret end
+		local ok,ret = xpcall(command,debug.traceback,paramstr,msg)
+		if not ok then ErrorNoHalt(("%s\n"):format(ret)) end
+		if ret==true then return ret end
+		if ret==false then return end
 	end
 	
 end
