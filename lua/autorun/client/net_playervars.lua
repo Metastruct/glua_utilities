@@ -1,3 +1,6 @@
+
+pcall(require,'netqueue')
+
 --TODO: pl:SetNetDataType("varname",TYPE_STRING)
 
 -- magic string length handling
@@ -129,12 +132,17 @@ function Player:SetNetData(key,value)
 	if self~=LocalPlayer() then error"not implemented" end
 	
 	--TODO: Make a generic queue emptier to reduce function garbage
-	net.queuesingle(function()
+	local f = function()
 		net.Start(Tag)
 			net.WriteString(key)
 			WriteType(value)
 		net.SendToServer()
-	end)
+	end
+	if net.queuesingle then
+		net.queuesingle(f)
+	else
+		f()
+	end
 end
 
 	
