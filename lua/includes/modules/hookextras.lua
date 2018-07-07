@@ -48,47 +48,48 @@ NextThink = RunNextThink
 util.NextThink = NextThink
 util.NextFrame = NextThink
 
--- OnInitialize
+do
+	-- OnInitialize
 
-local functions = { }
-local initialized = false
+	local functions = { }
+	local initialized = false
 
-local function error_func(line)
-	ErrorNoHalt("OnInitialize: " .. debug.traceback(line, 2))
-end
-
-local function Initialize()
-	
-	initialized = true
-	
-	for i = 1, #functions do
-		local func = functions[i]
-		xpcall(func, error_func)
+	local function error_func(line)
+		ErrorNoHalt("OnInitialize: " .. debug.traceback(line, 2))
 	end
 
-	functions = nil
-	hook.Remove("Initialize", "RunOnInitializeHelper")
-end
+	local function Initialize()
 
+		initialized = true
 
-function RunOnInit(func)
-	if not isfunction(func) then
-		error("Expected function", 2)
+		for i = 1, #functions do
+			local func = functions[i]
+			xpcall(func, error_func)
+		end
+
+		functions = nil
+		hook.Remove("Initialize", "RunOnInitializeHelper")
 	end
-	
-	if not functions then
-		timer.Simple(0,func)
-		return
+
+
+	function RunOnInit(func)
+		if not isfunction(func) then
+			error("Expected function", 2)
+		end
+
+		if not functions then
+			timer.Simple(0,func)
+			return
+		end
+
+		functions[#functions + 1] = func
 	end
-	
-	functions[#functions + 1] = func
+	RunOnInitialize = RunOnInit
+	OnInitialize = RunOnInit
+	util.OnInitialize = RunOnInit
+
+	hook.Add("Initialize", "RunOnInitializeHelper", Initialize)
 end
-RunOnInitialize = RunOnInit
-OnInitialize = RunOnInit
-util.OnInitialize = RunOnInit
-
-hook.Add("Initialize", "RunOnInitializeHelper", Initialize)
-
 
 if CLIENT then
 
@@ -115,6 +116,7 @@ if CLIENT then
 
 		functions = nil
 		hook.Remove("OnEntityCreated", "OnLocalPlayer")
+		hook.Remove("NetworkEntityCreated", "OnLocalPlayer")
 	end
 
 
@@ -132,7 +134,17 @@ if CLIENT then
 	end
 
 	util.OnLocalPlayer = util_OnLocalPlayer
-
-	hook.Add("OnEntityCreated", "OnLocalPlayer", OnEntityCreated)
-
+	if IsValid(LocalPlayer()) then
+		OnEntityCreated(LocalPlayer()) 
+	else
+		hook.Add("OnEntityCreated", "OnLocalPlayer", OnEntityCreated)
+		hook.Add("NetworkEntityCreated", "OnLocalPlayer", OnEntityCreated)
+		timer.Simple(1,function() 
+			if LocalPlayer():IsValid() and not initialized then
+				error_func"OnEntityCreated did not catch LocalPlayer??"
+				OnEntityCreated(LocalPlayer()) 	
+			end
+		end)
+	end
+	
 end
