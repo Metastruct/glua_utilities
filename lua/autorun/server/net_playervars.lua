@@ -171,7 +171,12 @@ net.Receive(Tag, function(len, pl)
 	local value = ReadType(_type, len - #key * 8 - 8 - 8)
 
 	-- for necessity
-	if hook.Call(Tag, nil, pl, key, value) == true then
+	local success, override = hook.Call(Tag, nil, pl, key, value)
+	if success == true then
+		if override ~= nil then
+			value = override
+		end
+
 		pl:SetNetData(key, value)
 	-- else
 		-- TODO: RejectMessage()
