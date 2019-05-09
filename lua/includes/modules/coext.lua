@@ -341,8 +341,9 @@ function steamworks.coDownload( fileid, uncomp )
 		return cb(...)
 	end
 	steamworks.Download( fileid, uncomp, cb2 )
-	instant = false
+
 	if instant==nil then
+		instant = false
 		path = co.waitcb(cb)
 	end
 	return path
