@@ -127,20 +127,13 @@ function PANEL:Init()
 			self.browser:RequestFocus()
 			
 		end
-		/*entry.Paint=function(entry,w,h)
-			DTextEntry.Paint(entry,w,h)
-			if self.browser:IsLoading() then
-				draw.RoundedBox(h*0.5,w-h,0,h,h,Color(200,150,0,255))
-			end
-		end*/
-	
+		
 	local btn = vgui.Create("DButton",self.top)
 		btn:SetText("")
 		btn:SetSize(24,24)
 		btn:Dock(LEFT)
 		function btn.DoClick()
 			self.browser:RunJavascript[[location.reload(true);]]
-
 		end
 		
 		local RefreshIcon	   = Material("icon16/arrow_refresh.png")
@@ -152,8 +145,7 @@ function PANEL:Init()
 				surface.SetMaterial(RefreshIcon)
 				surface.DrawTexturedRect(btn:GetWide()/2-16/2,btn:GetTall()/2-16/2,16,16)
 			else
-				--surface.SetDrawColor(240+math.sin(RealTime()*10)*15,100,50,200)
-				--surface.DrawRect(1,1,w-2,h-2)
+				
 				surface.SetDrawColor(255,255,255,255)
 				surface.SetMaterial(CancelIcon)
 				surface.DrawTexturedRect(btn:GetWide()/2-16/2,btn:GetTall()/2-16/2,16,16)
@@ -167,7 +159,7 @@ function PANEL:Init()
 		btn:SetIcon("icon16/script_gear.png")
 		btn:Dock(RIGHT)
 		function btn.DoClick()
-			self.browser:RunJavascript[[javascript:var s = document.documentElement.outerHTML; document.write('<html><body><textarea id="dsrc" style="width: 100%; height: 100%;"></textarea></body></html>');  var ta=document.getElementById( 'dsrc'); ta.value=s; void 0;]]
+			self.browser:RunJavascript[[var s = document.documentElement.outerHTML; document.write('<html><body><textarea id="dsrc" style="width: 100%; height: 100%;"></textarea></body></html>');  var ta=document.getElementById( 'dsrc'); ta.value=s; void 0;]]
 		end
 		
 	local browser = vgui.Create( "DHTML", self )
@@ -177,10 +169,38 @@ function PANEL:Init()
 	browser.OpeningURL=print
 	browser:SetFocusTopLevel(true)
 	browser.FinishedURL=print
-	browser:AddFunction( "gmod", "LoadedURL", function(url,title) self:LoadedURL(url,title) end )
+
+	browser.OnChangeTitle = function(browser,title)
+		self:SetTitle(title and title~="" and title or "Web browser")
+	end
+	
+	browser.OnChangeTargetURL = function(browser,url)
+		print("OnChangeTargetURL",url)
+		self:StatusChanged(url)
+	end
+	browser.OnChildViewCreated=print
+	
+	browser.OnBeginLoadingDocument = function(browser,url)
+		self.loaded=false
+	end
+	browser.OnFinishLoadingDocument = function(browser,url)
+		self.loaded=true
+	end
+	
+	browser.OnDocumentReady = function(browser,url)
+		self:_InjectScripts(browser)
+		if self.InjectScripts then
+			self:InjectScripts(browser)
+		end
+		self.url = url	
+		self:LoadedURL(url)
+		
+		self.entry:SetText(url)
+		
+	end
 	browser:AddFunction( "gmod", "dbg", function(...) Msg"[Browser] " print(...) end )
 	browser:AddFunction( "console", "info", function(...) Msg"[Browser] " print(...) end )
-	browser:AddFunction( "gmod", "status", function(txt) self:StatusChanged(txt) end )
+	browser:AddFunction( "gmod", "status", function(txt) print("status",txt) self:StatusChanged(txt) end )
 	browser:AddFunction( "gmod", "reqtoken", function()
 		if not GetAuthToken then
 			local s=([[if ('OnAuthToken' in window) { OnAuthToken(false); };]])
@@ -224,13 +244,9 @@ function PANEL:StatusChanged(txt)
 	end
 end
 
-function PANEL:LoadedURL(url,title)
-	if self.entry:HasFocus() then return end
-	self.url = url
-	self.entry:SetText(url)
-	self.loaded=true
-	self:SetTitle(title and title~="" and title or "Web browser")
+function PANEL:LoadedURL()
 end
+
 function PANEL:OpenURL(url)
 	self.browser:OpenURL(url)
 	self.entry:SetText(url)
@@ -251,20 +267,9 @@ function PANEL:Think(w,h)
 	
 	if not self.wasloading and self.browser:IsLoading() then
 		self.wasloading=true
-		--print"Loading..."
 	end
 	if self.wasloading and not self.browser:IsLoading() then
 		self.wasloading=false
-		--print("WAS LOADING")
-		self:_InjectScripts(self.browser)
-		if self.InjectScripts then
-			self:InjectScripts(self.browser)
-		end
-		
-		--self.browser:QueueJavascript[[window.onclick = function( e ) { gmod.dbg("onclick"); }]]
-		--self.browser:QueueJavascript[[window.onunload = function( e ) { gmod.dbg("onunload"); }]]
-		--self.browser:QueueJavascript[[window.onbeforeunload = function( e ) { gmod.dbg("onbeforeunload"); }]]
-
 	end
 	
 end
@@ -274,9 +279,10 @@ function PANEL:GetBrowser()
 end
 
 function PANEL:_InjectScripts(browser)
-	browser:QueueJavascript[[gmod.LoadedURL(document.location.href,document.title); gmod.status(""); ]]
 	browser:QueueJavascript[[function alert(str) { console.log("Alert: "+str); }]]
 	browser:QueueJavascript(fixselect)
+	
+	-- fix links and background transparency problems
 	browser:QueueJavascript[[
 		setTimeout(function() {
 			document.documentElement.style.backgroundColor = 'white';
@@ -301,15 +307,16 @@ function PANEL:_InjectScripts(browser)
 			gmod.status(this.href || "-");
 		}
 		function clickLink() {
-			if (this.href) {
-				gmod.LoadedURL(this.href,"Loading...");
-			}
 			gmod.status("Loading...");
+		}
+		function killstatus() {
+			gmod.status("");
 		}
 		var links = document.getElementsByTagName("a");
 		for (i = 0; i < links.length; i++) {
-			links[i].addEventListener('mouseover',getLink,false)
-			links[i].addEventListener('click',clickLink,false)
+			links[i].addEventListener('mouseover',getLink,false);
+			links[i].addEventListener('mouseout',killstatus,false);
+			links[i].addEventListener('click',clickLink,false);
 		}
 
 	]]
@@ -340,6 +347,10 @@ vgui.Register(Tag,PANEL,"DFrame")
 
 
 local webbrowser_panel
+
+function _G.GetWebBrowserPanel()
+	return webbrowser_panel
+end
 
 local function HidePanel()
 
