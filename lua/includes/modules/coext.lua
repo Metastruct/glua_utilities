@@ -350,6 +350,28 @@ function steamworks.coDownload( fileid, uncomp )
 end
 
 
+function steamworks.coDownloadUGC( fileid )
+	local instant
+	local path,fd
+	local cb = co.newcb()
+	local function cb2(...)
+		if instant==nil then
+			path,fd = ...
+			instant = true
+			return
+		end
+		return cb(...)
+	end
+	steamworks.DownloadUGC( fileid, cb2 )
+
+	if instant==nil then
+		instant = false
+		path,fd = co.waitcb(cb)
+	end
+	return path,fd
+end
+
+
 
 gameevent.Listen"player_disconnect"
 local disconnected = {}
