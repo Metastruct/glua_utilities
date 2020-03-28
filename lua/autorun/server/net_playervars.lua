@@ -81,7 +81,7 @@ local function Get(id, key)
 	return tt and tt[key]
 end
 
-local lookup = {}
+local lookup = setmetatable({}, { __mode = "k" })
 
 util.AddNetworkString(Tag)
 require"netqueue"
