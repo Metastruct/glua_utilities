@@ -59,14 +59,26 @@ do
 	end
 
 	local function Initialize()
-
+		if initialized then return end
 		initialized = true
-
-		for i = 1, #functions do
+		-- HACK: Make sure RunOnInit works even inside RunOnInit
+		local overflow = true
+	
+		for i = 1, #functions + 262140 do
 			local func = functions[i]
+	
+			if not func then
+				overflow = false
+				break
+			end
+	
 			xpcall(func, error_func)
 		end
-
+	
+		if overflow then
+			ErrorNoHalt("[WARN] RunOnInit hook list overflowed? ", #functions, "\n")
+		end
+	
 		functions = nil
 		hook.Remove("Initialize", "RunOnInitializeHelper")
 	end
@@ -89,6 +101,11 @@ do
 	util.OnInitialize = RunOnInit
 
 	hook.Add("Initialize", "RunOnInitializeHelper", Initialize)
+	hook.Add("InitPostEntity", "RunOnInitializeHelper", function()
+		if initialized then return end
+		ErrorNoHalt("[WARN] 'Initialize' hook 'RunOnInitializeHelper' did not run! (bugs in other addons? Possibly adding Initialize hooks while in Initialize hook?)\n")
+		Initialize()
+	end)
 end
 
 if CLIENT then
@@ -139,10 +156,11 @@ if CLIENT then
 	else
 		hook.Add("OnEntityCreated", "OnLocalPlayer", OnEntityCreated)
 		hook.Add("NetworkEntityCreated", "OnLocalPlayer", OnEntityCreated)
-		timer.Simple(1,function() 
+		
+		timer.Simple(1, function()
 			if LocalPlayer():IsValid() and not initialized then
 				error_func"OnEntityCreated did not catch LocalPlayer??"
-				OnEntityCreated(LocalPlayer()) 	
+				OnEntityCreated(LocalPlayer())
 			end
 		end)
 	end
