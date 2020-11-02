@@ -107,7 +107,8 @@ function PANEL:Init()
 	btn:Dock(LEFT)
 
 	function btn.DoClick()
-		self.browser:RunJavascript[[history.back();]]
+		self.browser:GoBack()
+		--self.browser:RunJavascript[[history.back();]]
 	end
 
 	local btn = vgui.Create("DButton", self.top)
@@ -117,7 +118,8 @@ function PANEL:Init()
 	btn:Dock(LEFT)
 
 	function btn.DoClick()
-		self.browser:RunJavascript[[history.forward();]]
+		self.browser:GoForward()
+		--self.browser:RunJavascript[[history.forward();]]
 	end
 
 	local entry = vgui.Create("DTextEntry", top)
@@ -145,7 +147,11 @@ function PANEL:Init()
 	btn:Dock(LEFT)
 
 	function btn.DoClick()
-		self.browser:RunJavascript[[location.reload(true);]]
+		if self.browser:IsLoading() then
+			self.browser:StopLoading()
+		else
+			self.browser:Refresh(true) --RunJavascript[[location.reload(true);]]
+		end
 	end
 
 	local RefreshIcon = Material("icon16/arrow_refresh.png")
@@ -179,9 +185,7 @@ function PANEL:Init()
 	self.browser = browser
 	browser:Dock(FILL)
 	browser.Paint = function() end
-	browser.OpeningURL = print
 	browser:SetFocusTopLevel(true)
-	browser.FinishedURL = print
 
 	browser.OnChangeTitle = function(browser, title)
 		self:SetTitle(title and title ~= "" and title or "Web browser")
@@ -196,6 +200,7 @@ function PANEL:Init()
 
 	browser.OnBeginLoadingDocument = function(browser, url)
 		self.loaded = false
+		self.entry:SetText(url)
 	end
 
 	browser.OnFinishLoadingDocument = function(browser, url)
@@ -285,6 +290,7 @@ function PANEL:LoadedURL()
 end
 
 function PANEL:OpenURL(url)
+	self.browser:StopLoading()
 	self.browser:OpenURL(url)
 	self.entry:SetText(url)
 
