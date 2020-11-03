@@ -192,7 +192,6 @@ function PANEL:Init()
 	end
 
 	browser.OnChangeTargetURL = function(browser, url)
-		print("OnChangeTargetURL", url)
 		self:StatusChanged(url)
 	end
 
