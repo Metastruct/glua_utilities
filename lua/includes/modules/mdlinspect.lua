@@ -462,6 +462,27 @@ function MDL:Textures()
 	
 	return t
 end
+-----------------------------
+function MDL:ParseSkins()
+	if self.skintable then return self.skintable end
+	local f = self.file
+	local textures = self:Textures()
+	local skintable = {}
+	assert(self:SeekTo(self.skinreference_index))
+
+	for i = 1, self.skinrfamily_count do
+		skintable[i] = {}
+
+		for j = 1, self.skinreference_count do
+			local textureid = f:Read(1):byte() + f:Read(1):byte() * 256
+			skintable[i][j] = textures[textureid + 1]
+		end
+	end
+
+	self.skintable = skintable
+
+	return skintable
+end
 
 -----------------------------
 
