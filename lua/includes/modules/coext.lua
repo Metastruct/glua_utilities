@@ -18,7 +18,7 @@ end
 function co.post(url,data,hdr)
 	
 	local ok,err = co.newcb(),co.newcb()
-	http.Post(url,data,ok,err)
+	http.Post(url,data,ok,err,hdr)
 	
 	return http_wrap(ok,err,co.waitone())
 
