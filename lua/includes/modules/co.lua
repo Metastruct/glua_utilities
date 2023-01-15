@@ -643,10 +643,6 @@ end
 
 
 
-if NATIVE then
-	return co,co._Think
-end
-
 -- testing --
 
 
@@ -726,3 +722,6 @@ co(function()
 	print("SECOND",RealTime()-a,f2())
 end)
 ]]
+
+
+return co,co._Think
