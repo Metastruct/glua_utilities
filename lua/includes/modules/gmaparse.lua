@@ -126,7 +126,9 @@ function GMA:EnumFiles(reset)
 	
 	entry.Size		= from_u_int(f:Read(4) or "\0",true) -- long long
 	
-	assert(f:Read(4)=='\0\0\0\0')
+	if f:Read(4)~='\0\0\0\0' then
+		return self:_ParseFail'4gbfile'
+	end
 	
 	if entry.Size>1024*1024*256 then
 		return self:_ParseFail'bigsize'
