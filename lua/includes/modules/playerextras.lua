@@ -75,18 +75,21 @@ end
 
 local SERVER = SERVER
 
-local function updatePlayerCacheList(cause)
+local function updatePlayerCacheList()
 	local plylist = player.GetAll()
 	cache_count = #plylist
 
 	for i = 1, cache_count do
-		cache[i] = plylist[i]
+		local ply = plylist[i]
+		-- assert(ply:IsValid())
+		cache[i] = ply
 	end
 
 	for i = cache_count + 1, cache_count + 256 do
 		if cache[i] == nil then break end
 		cache[i] = nil
 	end
+	
 end
 
 local function EntityCreated(pl)
@@ -106,14 +109,19 @@ end
 
 
 
-local function EntityRemoved(pl)
+local function EntityRemoved(pl, fullupdate)
 	--assert(pl:IsPlayer()==pl:IsPlayer(),"isplayer mismatch")
-	if not pl:IsPlayer() then
-		return
-	end
-	
+	if not pl:IsPlayer() then return end
 	updatePlayerCacheList(pl)
 
+	for i = cache_count, 1, -1 do
+		local candidate = cache[i]
+
+		if candidate == pl then
+			table.remove(cache, i)
+			cache_count = cache_count - 1
+		end
+	end
 end
 
 if SERVER then
@@ -121,45 +129,42 @@ if SERVER then
 end
 hook.Add("EntityRemoved", Tag, EntityRemoved)
 
+local TEST=false
 
-
-
---[[ testing --
-
-
-local function assertfind(t, pl)
-	for k, v in next, t do
-		if v == pl then
-			return
+if TEST then 
+	
+	updatePlayerCacheList()
+	
+	local Tag='a'
+	local DBG=print
+	
+	hook.Add("Think", Tag, function()
+		for k, pl in pairs(player.GetAllCached()) do
+			if not pl:IsValid() then
+				DBG("INVALID IN THINK ", pl," - ", player.UserIDToNick(player.ToUserID(pl)))
+				updatePlayerCacheList(pl)
+			end
 		end
-
-	end
-
-	error("Did not find: " .. tostring(pl) .. ' - ' .. tostring(player.ToUserID(pl)) .. ' - ' .. tostring(player.UserIDToName(player.ToUserID(pl))) .. ' from ' .. (t == player.GetAllCached() and "cachetbl" or "playerall"))
+	
+		if CLIENT then
+			for k, pl in pairs(player.InPVS()) do
+				if not pl:IsValid() then
+					DBG("INVALID IN PVS THINK ", pl," - ", player.UserIDToNick(player.ToUserID(pl)))
+					
+				end
+			end
+		end
+	end)
+	hook.Add("EntityRemoved", Tag, function(pl,reas)
+		if not pl:IsPlayer() then return end
+		DBG("EntityRemoved",pl,reas and "FULLUPDATE" or "")
+	
+	end)
+	hook.Add("PlayerDisconnected", Tag, function(pl,reas)
+		if not pl:IsPlayer() then return end
+		DBG("PlayerDisconnected",pl,reas and "FULLUPDATE" or "")
+	end)
 end
-
-hook.Add("Think", Tag, function()
-	local t = player.GetAll()
-	local t2 = player.GetAllCached()
-	for k, v in next, t do
-		assert(IsValid(v), "getall not valid")
-		assert(v:IsPlayer(), "getall not valid IsPlayer1")
-		assert(v:IsPlayer(), "getall not valid IsPlayer2")
-		assertfind(t2, v)
-	end
-
-	for k, v in next, t2 do
-		assert(IsValid(v), "cache not valid")
-		assert(v:IsPlayer(), "cache not valid IsPlayer1")
-		assert(v:IsPlayer(), "cache not valid IsPlayer2")
-		assertfind(t, v)
-	end
-
-end)
-
---]]
-
-
 -------------------------------------
 
 local Tag = 'PlayerSlowThink'
