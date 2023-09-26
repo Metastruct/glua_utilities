@@ -71,29 +71,24 @@ end
 
 
 local SERVER=SERVER
+local function updatePlayerCacheList(cause)
+	local plylist = player.GetAll()
+	cache_count = #plylist
+	for i=1,cache_count do
+		cache[i]=plylist[i]
+	end
+	for i=cache_count+1,i+128 do
+		if cache[i] == nil then break end
+		cache[i]=nil
+	end
+end
 
 local function EntityCreated(pl)
-	--assert(pl:IsPlayer()==pl:IsPlayer(),"isplayer mismatch")
-	if pl:IsPlayer() then
-		--print("Creating", pl)
-		if SERVER then
-			local uid = pl:UserID()
-			for k, v in next, cache do
-				if uid == v:UserID() then
-
-					table.remove(cache, k)
-					cache_count = cache_count - 1
-				   -- print("NOCREAET, CACHE REMOVE", pl:UserID(), pl)
-					return
-				end
-
-			end
-
-		end
-
-		table.insert(cache, pl)
-		cache_count = cache_count + 1
+	if not pl:IsPlayer() then
+		return
 	end
+	
+	updatePlayerCacheList(pl)
 
 end
 
@@ -103,31 +98,15 @@ else
 	hook.Add("NetworkEntityCreated", Tag, EntityCreated)
 end
 
-local function add(pl)
-	for k,pl2 in next,cache do
-		if pl2==pl then return end
-	end
-	table.insert(cache,pl)
-	cache_count = cache_count + 1
-end
-for k, pl in next, player.GetAll() do
-	add(pl)
-end
+
 
 local function EntityRemoved(pl)
 	--assert(pl:IsPlayer()==pl:IsPlayer(),"isplayer mismatch")
-	if pl:IsPlayer() then
-		--print("Removing", pl)
-		for k, v in next, cache do
-			if pl == v then
-				table.remove(cache, k)
-				cache_count = cache_count - 1
-				-- return -- Add or not? Recursion even?
-			end
-
-		end
-
+	if not pl:IsPlayer() then
+		return
 	end
+	
+	updatePlayerCacheList(pl)
 
 end
 
