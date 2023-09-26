@@ -60,26 +60,32 @@ function player.All()
 end
 
 function player.iterator()
-	local i=1
+	local i = 1
+
 	local function iter_all()
-		local val=cache[i]
-		i=val and i+1 or 1
+		local val = cache[i]
+		i = val and i + 1 or 1
+
 		return val
 	end
+
 	return iter_all
 end
 
 
-local SERVER=SERVER
+local SERVER = SERVER
+
 local function updatePlayerCacheList(cause)
 	local plylist = player.GetAll()
 	cache_count = #plylist
-	for i=1,cache_count do
-		cache[i]=plylist[i]
+
+	for i = 1, cache_count do
+		cache[i] = plylist[i]
 	end
-	for i=cache_count+1,i+128 do
+
+	for i = cache_count + 1, cache_count + 256 do
 		if cache[i] == nil then break end
-		cache[i]=nil
+		cache[i] = nil
 	end
 end
 
@@ -87,7 +93,7 @@ local function EntityCreated(pl)
 	if not pl:IsPlayer() then
 		return
 	end
-	
+
 	updatePlayerCacheList(pl)
 
 end
