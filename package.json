@@ -1,6 +1,6 @@
 {
   "name": "helpers",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "things that should have their own repo or at least a branch",
   "repository": {
     "type": "git",
