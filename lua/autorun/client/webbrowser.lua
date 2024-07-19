@@ -420,7 +420,7 @@ local function ShowPanel(url)
 	return webbrowser_panel
 end
 
-local webbrowser_enabled = CreateClientConVar("webbrowser_enabled", "0", true)
+local webbrowser_enabled = CreateClientConVar("webbrowser_enabled", "0", true, false, "Displays the glua_utilities webbrowser.")
 local mediaurls = {"mp4"} -- File extensions that shouldn't be opened with ingame browser.
 gui.OLDOpenURL = gui.OLDOpenURL or gui.OpenURL
 
@@ -449,10 +449,8 @@ local function webbrowser(a, b, c, line)
 	ShowPanel(url)
 end
 
-concommand.Add("webbrowser", webbrowser, nil)
-concommand.Add("browser", webbrowser, nil)
-concommand.Add("open", webbrowser, nil)
-local webbrowser_f1_open = CreateClientConVar("webbrowser_f1_open", "1", true)
+concommand.Add("webbrowser_open", webbrowser, nil, "Opens the glua_utilities web browser.")
+local webbrowser_f1_open = CreateClientConVar("webbrowser_f1_open", "0", true, false, "Allows F1 to open the glua_utilities web browser.")
 local f1key = input.LookupKeyBinding(KEY_F1)
 
 local rec
