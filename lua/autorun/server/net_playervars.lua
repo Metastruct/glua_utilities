@@ -170,18 +170,17 @@ net.Receive(Tag, function(len, pl)
 	local _type = net.ReadUInt(8)
 	local value = ReadType(_type, len - #key * 8 - 8 - 8)
 
-	local accepted, override = false, nil
-	for _, fn in pairs(hook.GetTable()[Tag] or {}) do
-		local success, hookOverride = fn(pl, key, value)
-		if success == false then return end
-		if success == true then
-			accepted = true
-			if hookOverride ~= nil then override = hookOverride end
+	local success, override = hook.Run(Tag, pl, key, value) -- this is for applying
+	if success == true then
+		if override ~= nil then
+			value = override
 		end
+
+		local allowed = hook.Run("Can" .. Tag, pl, key, value) -- this is for permissions
+		if allowed == false then return end
+			
+		pl:SetNetData(key, value)
 	end
-	if not accepted then return end
-	if override ~= nil then value = override end
-	pl:SetNetData(key, value)
 end)
 
 function Player:GetNetData(key)
